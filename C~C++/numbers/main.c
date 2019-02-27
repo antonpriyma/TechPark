@@ -100,6 +100,9 @@ void translate(const int *Q, const int *P, const char *const S) {
 }
 
 int read(const int *Q, const int *P, char *S) {
+    char c, *buf;
+    int i = 1;
+    size_t n1 = 99;
     if (!check_char_pointer(S) || !check_int_pointer(Q) ||
         !check_int_pointer(P)) {
         printf(ERROR);
@@ -107,11 +110,8 @@ int read(const int *Q, const int *P, char *S) {
     }
     int ok = scanf("%d%d", (int *)Q, (int *)P);
     CHECK_OK;
-    char c;
+
     getchar();
-    char *buf = S;
-    int i = 1;
-    size_t n1 = 99;
     while ((c = (char)getchar()) != EOF) {
         if (i >= n1) {
             buf = (char *)realloc(S, n1 * 2);
