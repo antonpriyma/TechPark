@@ -1,4 +1,4 @@
-# Install script for directory: /home/anton/CLionProjects/tech_park/numbers
+# Install script for directory: /home/anton/CLionProjects/TechPark/C~C++/numbers
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -45,5 +45,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/anton/CLionProjects/tech_park/numbers/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/anton/CLionProjects/TechPark/C~C++/numbers/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

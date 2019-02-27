@@ -6,13 +6,13 @@
 
 #IncludeRegexTransform: 
 
-/home/anton/CLionProjects/tech_park/numbers/main.c
+/home/anton/CLionProjects/TechPark/C~C++/numbers/main.c
+ctype.h
+-
 stdio.h
 -
 stdlib.h
 -
 string.h
--
-ctype.h
 -
 
