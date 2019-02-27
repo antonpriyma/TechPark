@@ -1,0 +1,1 @@
+/usr/bin/cc -g   CMakeFiles/bool_parser.dir/main.c.o  -o bool_parser 
