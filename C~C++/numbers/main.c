@@ -6,6 +6,7 @@
 #define ERROR "[error]"
 #define ERR 0
 #define OK 1
+#define STRING_SIZE 99
 #define CHECK_OK                                                               \
   if (!ok)                                                                     \
   return ERR
@@ -102,19 +103,20 @@ void translate(const int *Q, const int *P, const char *const S) {
     free(result);
 }
 
+//Считываем в буфер, если переполняется, то увиличиваем.
 void scan_string(char *S) {
     char *buf = S;
     int count=0;
     int n2 = 0;
     while (1) {
-        if (n2 == 99) {
-            buf = realloc(S, 99);
-            buf += 98;
+        if (n2 == STRING_SIZE) {
+            buf = (char *)realloc(S, STRING_SIZE);
+            buf += STRING_SIZE-1;
             n2 = 0;
         }
         scanf("%98s", buf);
-        n2 += 99;
-        for (int i = 0; i < 98; i++) {
+        n2 += STRING_SIZE;
+        for (int i = 0; i < STRING_SIZE-1; i++) {
             if (buf[i] == EOF || buf[i] == '\0' || buf[i] == '\n') {
                 count = 1;
                 break;
@@ -147,7 +149,7 @@ int read(const int *Q, const int *P, char *S) {
 int main() {
     const int *const Q = (int *)calloc(1, sizeof(int));
     const int *const P = (int *)calloc(1, sizeof(int));
-    char *S = (char *)malloc(100);
+    char *S = (char *)malloc(99);
     if (read(Q, P, S) != OK) {
         printf(ERROR);
         delete (P, Q, S);
