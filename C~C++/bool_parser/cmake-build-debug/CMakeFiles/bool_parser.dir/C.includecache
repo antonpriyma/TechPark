@@ -1,0 +1,16 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/anton/CLionProjects/TechPark/C~C++/bool_parser/main.c
+memory.h
+-
+stdio.h
+-
+stdlib.h
+-
+

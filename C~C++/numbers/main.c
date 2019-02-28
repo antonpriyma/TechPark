@@ -3,11 +3,16 @@
 #include <stdlib.h>
 #include <string.h>
 
+#if defined(LP64) || defined(_LP64)//S не больше size_t
+#define STRING_SIZE 65
+#elif defined(LP32) || defined(_LP32)
+#define STRING_SIZE 33
+#endif
 #define ERROR "[error]"
 #define ERR 0
 #define OK 1
-#define STRING_SIZE 99
-#define CHECK_OK                                                               \
+
+#define CHECK_OK\
   if (!ok)                                                                     \
   return ERR
 //Очистка памяти
@@ -44,6 +49,17 @@ char int_to_dec(size_t i) {
         return (char)('A' + i - 10);
     }
     return 0;
+}
+
+int upcase_string(char* S){
+    if (!S){
+        return ERR;
+    }
+    size_t len = strlen(S);
+    for (int i=0;i<len;i++){
+        S[i]= (char) toupper(S[i]);
+    }
+    return OK;
 }
 
 int check_char_pointer(const char *const p) {
@@ -111,6 +127,11 @@ void scan_string(char *S) {
     while (1) {
         if (n2 == STRING_SIZE) {
             buf = (char *)realloc(S, STRING_SIZE);
+            if (buf){
+                S=buf;
+            } else{
+                free(S);
+            }
             buf += STRING_SIZE-1;
             n2 = 0;
         }
@@ -128,6 +149,7 @@ void scan_string(char *S) {
     }
 }
 
+
 int read(const int *Q, const int *P, char *S) {
     if (!check_char_pointer(S) || !check_int_pointer(Q) ||
         !check_int_pointer(P)) {
@@ -139,7 +161,12 @@ int read(const int *Q, const int *P, char *S) {
 
     getchar();
 
-    scan_string(S);
+    //scan_string(S);
+    scanf("%65s",S);
+    ok=upcase_string(S);
+    CHECK_OK;
+
+
     if (*Q > 36 || *P < 2) {
         return ERR;
     }
@@ -149,7 +176,7 @@ int read(const int *Q, const int *P, char *S) {
 int main() {
     const int *const Q = (int *)calloc(1, sizeof(int));
     const int *const P = (int *)calloc(1, sizeof(int));
-    char *S = (char *)malloc(99);
+    char *S = (char *)malloc(STRING_SIZE);
     if (read(Q, P, S) != OK) {
         printf(ERROR);
         delete (P, Q, S);
