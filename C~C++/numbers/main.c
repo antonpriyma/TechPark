@@ -9,13 +9,13 @@
 #define CHECK_OK                                                               \
   if (!ok)                                                                     \
   return ERR
-
+//Очистка памяти
 void delete (const int *p, const int *q, char *c) {
     free((int *)p);
     free((int *)q);
     free(c);
 }
-
+//char->int
 int dec_to_int(char c) {
     if (c <= '9' && c >= '0') {
         return c - '0';
@@ -26,7 +26,7 @@ int dec_to_int(char c) {
 
     return ERR;
 }
-
+//Проверка на корректность ввода
 int check_char(char c, int Q) {
     if (!((c <= '9' && c >= '0') || (c >= 'A' && c <= 'Z')) ||
         dec_to_int(c) >= Q) {
@@ -34,7 +34,7 @@ int check_char(char c, int Q) {
     }
     return OK;
 }
-
+//int->char
 char int_to_dec(size_t i) {
     if (i <= 9) {
         return (char)('0' + i);
@@ -44,6 +44,7 @@ char int_to_dec(size_t i) {
     }
     return 0;
 }
+
 int check_char_pointer(const char *const p) {
     if (!p) {
         return ERR;
@@ -57,6 +58,8 @@ int check_int_pointer(const int *const p) {
     }
     return OK;
 }
+
+//Перевод из Q в P
 void translate(const int *Q, const int *P, const char *const S) {
     //Проверка на валидность
     size_t size = 0, i = 0;
@@ -99,10 +102,31 @@ void translate(const int *Q, const int *P, const char *const S) {
     free(result);
 }
 
+void scan_string(char *S) {
+    char *buf = S;
+    int count=0;
+    int n2 = 0;
+    while (1) {
+        if (n2 == 99) {
+            buf = realloc(S, 99);
+            buf += 98;
+            n2 = 0;
+        }
+        scanf("%98s", buf);
+        n2 += 99;
+        for (int i = 0; i < 98; i++) {
+            if (buf[i] == EOF || buf[i] == '\0' || buf[i] == '\n') {
+                count = 1;
+                break;
+            }
+            buf[i] = (char)toupper(buf[i]);
+        }
+        if (count)
+            break;
+    }
+}
+
 int read(const int *Q, const int *P, char *S) {
-    char c, *buf;
-    int i = 1;
-    size_t n1 = 99;
     if (!check_char_pointer(S) || !check_int_pointer(Q) ||
         !check_int_pointer(P)) {
         printf(ERROR);
@@ -112,19 +136,8 @@ int read(const int *Q, const int *P, char *S) {
     CHECK_OK;
 
     getchar();
-    while ((c = (char)getchar()) != EOF) {
-        if (i >= n1) {
-            buf = (char *)realloc(S, n1 * 2);
-            if (!buf) {
-                return ERR;
-            }
-            n1 *= 2;
-        }
-        *(S + i - 1) = (char)toupper(c); //считывание строки
-        *(S + i) = '\0';
-        i++;
-    }
 
+    scan_string(S);
     if (*Q > 36 || *P < 2) {
         return ERR;
     }
