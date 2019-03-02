@@ -2,27 +2,50 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define NONE 0
-#define DELIMETER 1
-#define NUMBER 3
+#define STRING_SIZE 99
 #define YES 1
+#define ERR 1
+#define OK 0
 #define NO 0
-#define END '\0'
+#define ERROR "[error]"
 
+#define END_PROGRAMM                                                           \
+  delete (len_1, partResult1, partResult2);                                     \
+  return 0;
+#define CHECK_ERR                                                              \
+  if (err) {                                                                   \
+    printf(ERROR);                                                             \
+    END_PROGRAMM;                                                              \
+  }
+
+/* Рекурсивно-последовательный парсер логических выражений.
+ * Студент - Прийма Антон
+ * Run id = 493
+*/
+
+//В глобальных переменных храним выражение, текущий токен и индексы.
 char *expression;
-int expIndex;
+int exp_index;
 char *token;
-int tokIndex;
+int tok_index;
 size_t len;
-int tokType;
 
-int evalExp4(int *, int *, int *);
-int evalExp3(int *, int *, int *, int *);
-int stringToInt(char *, int *, int *);
+int eval_expr_4(int *, int *, int *);        //Уровень скобок
+int eval_expr_3(int *, int *, int *, int *); //Уровень ^
+int string_to_int(char *, int *, int *);     //Токен -> массив
 
-int RemoveSpaces(char *source) {
-    if (source == NULL) {
-        return -1;
+void delete (int *val1, int *val2, int *val3) {
+    if (val1)
+        free(val1);
+    if (val2)
+        free(val2);
+    if (val3)
+        free(val3);
+}
+
+int remove_spaces(char *source) {
+    if (!source) {
+        return ERR;
     }
     char *i = source;
     char *j = source;
@@ -37,6 +60,7 @@ int RemoveSpaces(char *source) {
     return 0;
 }
 
+// Сумма множеств.
 void unite(int *a, int *b, int *len1, int *len2) {
     for (int i = 0; i < *len2; i++) {
         char contains = 0;
@@ -54,6 +78,7 @@ void unite(int *a, int *b, int *len1, int *len2) {
     *len2 = 0;
 }
 
+// Разность множеств.
 void sub(int *a, int *b, const int *len1, int *len2) {
     for (int i = 0; i < *len1; i++) {
         char contains = 0;
@@ -73,6 +98,7 @@ void sub(int *a, int *b, const int *len1, int *len2) {
     *len2 = 0;
 }
 
+// Пересечение множеств.
 void intersection(int *a, const int *b, const int *len1, const int *len2) {
 
     for (int i = 0; i < *len1; i++) {
@@ -89,7 +115,7 @@ void intersection(int *a, const int *b, const int *len1, const int *len2) {
     }
 }
 
-int isDelim(char c) {
+int is_delim(char c) {
     char delims[] = {'U', '^', '\\', '(', ')'};
     char size = 5;
     for (int i = 0; i < size; i++) {
@@ -100,105 +126,123 @@ int isDelim(char c) {
     return NO;
 }
 
-void getToken() {
+void get_token() {
 
-    tokType = NONE;
     token[0] = '\0';
-    tokIndex = 0;
-    if (expIndex == len) {
-        tokType = END;
+    tok_index = 0;
+    if (exp_index == len) {
         return;
     }
 
-    if (isDelim(expression[expIndex])) {
-        token[tokIndex++] = expression[expIndex];
-        token[tokIndex] = '\0';
-        expIndex++;
-        tokType = DELIMETER;
-    } else if (expression[expIndex] == '[') {
-        while (expression[expIndex++] != ']') {
-            token[tokIndex++] = expression[expIndex - 1];
+    if (is_delim(expression[exp_index])) {
+        token[tok_index++] = expression[exp_index];
+        token[tok_index] = '\0';
+        exp_index++;
+    } else if (expression[exp_index] == '[') {
+        while (expression[exp_index++] != ']') {
+            token[tok_index++] = expression[exp_index - 1];
         }
-        token[tokIndex++] = expression[expIndex - 1];
-        token[tokIndex] = '\0';
-        tokType = NUMBER;
+        token[tok_index++] = expression[exp_index - 1];
+        token[tok_index] = '\0';
     }
 }
 
-int evalExp2(int *partResult1, int *partResult2, int *lenA) {
+int eval_expr_2(int *part_result_1, int *part_result_2, int *len_1) {
+    if (!part_result_1 || !part_result_2 || !len_1) {
+        return ERR;
+    }
     char op;
-    int *lenB = (int *)calloc(1, sizeof(int));
+    int *len_2 = (int *)calloc(1, sizeof(int));
     int *buf = (int *)malloc(100 * sizeof(int));
-    getToken();
-    int err = evalExp3(partResult1, partResult2, buf, lenA);
-    if (err == -1) {
+    get_token();
+    int err = eval_expr_3(part_result_1, part_result_2, buf, len_1);
+    if (err) {
         free(buf);
-        free(lenB);
-        return -1;
+        free(len_2);
+        return ERR;
     }
     while ((op = token[0]) == 'U' || op == '^' || op == '\\') {
-        getToken();
-        err = evalExp3(partResult2, partResult1, buf, lenB);
-        if (err == -1) {
+        get_token();
+        err = eval_expr_3(part_result_2, part_result_1, buf, len_2);
+        if (err) {
             free(buf);
-            free(lenB);
-            return -1;
+            free(len_2);
+            return ERR;
         }
         switch (op) {
             case 'U':
-                unite(partResult1, partResult2, lenA, lenB);
+                unite(part_result_1, part_result_2, len_1, len_2);
                 break;
             case '\\':
-                sub(partResult1, partResult2, lenA, lenB);
+                sub(part_result_1, part_result_2, len_1, len_2);
                 break;
             default:
                 break;
         }
     }
     free(buf);
-    free(lenB);
+    free(len_2);
     return 0;
 }
 
-int evalExp3(int *partResult1, int *partResult2, int *buf, int *lenA) {
-    int *lenB = (int *)calloc(1, sizeof(int));
-
-    evalExp4(partResult1, partResult2, lenA);
+int eval_expr_3(int *partResult1, int *partResult2, int *buf, int *len_1) {
+    if (!partResult1 || !partResult2 || !buf || !len_1) {
+        return ERR;
+    }
+    int *len_2 = (int *)calloc(1, sizeof(int));
+    int err = eval_expr_4(partResult1, partResult2, len_1);
+    if (err) {
+        free(len_2);
+        return ERR;
+    }
     while (token[0] == '^') {
-        getToken();
-        int err = evalExp4(buf, partResult1, lenB);
-        if (err == -1) {
-            free(lenB);
-            return -1;
+        get_token();
+        int err = eval_expr_4(buf, partResult1, len_2);
+        if (err) {
+            free(len_2);
+            return ERR;
         }
-        intersection(partResult1, buf, lenA, lenB);
+        intersection(partResult1, buf, len_1, len_2);
     }
-    free(lenB);
-    return 0;
+    free(len_2);
+    return OK;
 }
 
-int evalExp4(int *partResult1, int *partResult2, int *lenA) {
-
+int eval_expr_4(int *part_result_1, int *part_result_2, int *len_1) {
+    if (!part_result_1 || !part_result_2 || !len_1) {
+        return ERR;
+    }
     if (*token == '(') {
-        evalExp2(partResult1, partResult2, lenA);
-        if (*token != ')') {
-            return -1;
+        int err = eval_expr_2(part_result_1, part_result_2, len_1);
+        if (err) {
+            return ERR;
         }
-        getToken();
-        return 0;
+        if (*token != ')') {
+            return ERR;
+        }
+        get_token();
+        return OK;
     } else {
-        stringToInt(token, partResult1, lenA);
+        int err = string_to_int(token, part_result_1, len_1);
+        if (err) {
+            return ERR;
+        }
     }
 
-    return 0;
+    return OK;
 }
 
-int stringToInt(char *token, int *partResult1, int *len) {
-    RemoveSpaces(token);
+int string_to_int(char *token, int *part_result_1, int *len) {
+    if (!token || !part_result_1 || !len)
+        return ERR;
+    int err = remove_spaces(token);
+    if (err)
+        return ERR;
+
     int count = 0;
     char *buf1 = (char *)malloc(100);
-    int *buf = partResult1;
-    for (int i = 0; i < tokIndex; i++) {
+    int *buf = part_result_1;
+    for (int i = 0; i < tok_index; i++) {
         if (token[i] == ',' || token[i] == '[') {
             if (token[i + 1] == ']') {
                 break;
@@ -213,22 +257,27 @@ int stringToInt(char *token, int *partResult1, int *len) {
             buf[(*len)++] = atoi(buf1);
         }
     }
-    getToken();
+    get_token();
     free(buf1);
-    return 0;
+    return OK;
 }
 
-int execute(int *partResult1, int *partResult2, int *lenA) {
-    int err = evalExp2(partResult1, partResult2, lenA);
-    if (err == -1) {
-        return -1;
+//вход в парсер
+int execute(int *part_result_1, int *part_result_2, int *len_1) {
+    int err = eval_expr_2(part_result_1, part_result_2, len_1);
+    if (err) {
+        return ERR;
     }
-    return 0;
+    return OK;
 }
 
-void printSet(int *set, int lenA) {
+//вывод
+int printSet(int *set, int len_1) {
+    if (!set) {
+        return ERR;
+    }
     printf("[");
-    for (int i = 0, count = 0; i < lenA; i++) {
+    for (int i = 0, count = 0; i < len_1; i++) {
         if (count == 0) {
 
             if (set[i] != -1) {
@@ -242,36 +291,60 @@ void printSet(int *set, int lenA) {
         }
     }
     printf("]");
+    return OK;
+}
+
+//считывание строки
+int scan_string() {
+    if (!expression) {
+        return ERR;
+    }
+    char c, *buf = NULL;
+    int i = 0;
+    size_t n1 = STRING_SIZE;
+    while ((c = (char)getchar()) != EOF) {
+        if (i >= n1 - 1) {
+            buf = (char *)realloc(expression, n1 * 2);
+            if (!buf) {
+                return ERR;
+            }
+            expression = buf;
+            n1 *= 2;
+        }
+        i++;
+        *(expression + i - 1) = c;
+        *(expression + i) = '\0';
+    }
+
+    int err = remove_spaces(expression);
+    if (err) {
+        return ERR;
+    }
+    len = strlen(expression);
+    return OK;
+}
+
+void init() {
+    exp_index = 0;
+    tok_index = 0;
+    token = (char *)malloc(STRING_SIZE);
+    token[0] = '\0';
+    expression = (char *)malloc(STRING_SIZE);
 }
 
 int main() {
-    expIndex = 0;
-    tokIndex = 0;
-    token = (char *)malloc(100);
-    token[0] = '\0';
-    expression = (char *)malloc(100);
-    gets(expression);
-    int err = RemoveSpaces(expression);
-    if (err == -1) {
-        printf("[error]");
-        return 0;
-    }
-    len = strlen(expression);
+    int err;
     int *partResult1 = (int *)malloc(100 * sizeof(int));
     int *partResult2 = (int *)malloc(100 * sizeof(int));
-    int *lenA = (int *)calloc(1, sizeof(int));
-    err = execute(partResult1, partResult2, lenA);
-    if (err == -1) {
-        free(lenA);
-        free(partResult1);
-        free(partResult2);
-        printf("[error]");
-        return 0;
-    }
-    printSet(partResult1, *lenA);
+    int *len_1 = (int *)calloc(1, sizeof(int));
+    init();
+    err = scan_string(expression);
+    CHECK_ERR
 
-    free(lenA);
-    free(partResult1);
-    free(partResult2);
-    return 0;
+    err = execute(partResult1, partResult2, len_1);
+    CHECK_ERR
+    err = printSet(partResult1, *len_1);
+    CHECK_ERR
+
+    END_PROGRAMM
 }

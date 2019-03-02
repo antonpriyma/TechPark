@@ -15,6 +15,11 @@
 #define CHECK_OK\
   if (!ok)                                                                     \
   return ERR
+
+/* Перевод из 1 системы счислений в другую.
+ * Студент - Антон Прийма
+ * Run id = 494
+ * */
 //Очистка памяти
 void delete (const int *p, const int *q, char *c) {
     free((int *)p);
