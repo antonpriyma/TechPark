@@ -1,0 +1,1 @@
+/usr/bin/c++  -g   CMakeFiles/binSearch.dir/main.cpp.o  -o binSearch 
