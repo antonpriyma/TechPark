@@ -175,7 +175,7 @@ int main() {
     }
     char *result = translate(Q, P, S);
     printf("%s", result);
-    if (strcmp(result,ERROR)) {
+    if (strcmp(result,ERROR)!=0) {
         free(result);
     }
     free(S);
