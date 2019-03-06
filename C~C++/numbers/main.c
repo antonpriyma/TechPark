@@ -20,6 +20,8 @@
  * Студент - Антон Прийма
  * Run id = 494
  * */
+
+
 //Очистка памяти
 void delete (const int *p, const int *q, char *c) {
     free((int *)p);

@@ -9,14 +9,14 @@
 #define NO 0
 #define ERROR "[error]"
 
-#define END_PROGRAMM                                                           \
-  delete (len_1, partResult1, partResult2);                                      \
-  return 0;
-#define CHECK_ERR                                                              \
-  if (err) {                                                                   \
-    printf(ERROR);                                                           \
-    END_PROGRAMM;                                                              \
-  }
+//#define END_PROGRAMM                                                           \
+//  delete (len_1, partResult1, partResult2);                                    \
+//  return 0;
+//#define CHECK_ERR                                                              \
+//  if (err) {                                                                   \
+//    printf(ERROR);                                                             \
+//    END_PROGRAMM;                                                              \
+//  }
 
 /* Рекурсивно-последовательный парсер логических выражений.
  * Студент - Прийма Антон
@@ -34,14 +34,10 @@ int eval_expr_4(int *, int *, int *);        //Уровень скобок
 int eval_expr_3(int *, int *, int *, int *); //Уровень ^
 int string_to_int(char *, int *, int *);     //Токен -> массив
 
-
 void delete (int *val1, int *val2, int *val3) {
-    if (val1)
-        free(val1);
-    if (val2)
-        free(val2);
-    if (val3)
-        free(val3);
+    free(val1);
+    free(val2);
+    free(val3);
 }
 
 int remove_spaces(char *source) {
@@ -155,7 +151,9 @@ int eval_expr_2(int *part_result_1, int *part_result_2, int *len_1) {
     char op;
     int *len_2 = (int *)calloc(1, sizeof(int));
     int *buf = (int *)malloc(100 * sizeof(int));
-    if (!len_2 || !buf){
+    if (!len_2 || !buf) {
+        free(len_2);
+        free(buf);
         return ERR;
     }
     get_token();
@@ -194,7 +192,7 @@ int eval_expr_3(int *partResult1, int *partResult2, int *buf, int *len_1) {
         return ERR;
     }
     int *len_2 = (int *)calloc(1, sizeof(int));
-    if (!len_2){
+    if (!len_2) {
         return ERR;
     }
     int err = eval_expr_4(partResult1, partResult2, len_1);
@@ -248,7 +246,7 @@ int string_to_int(char *token, int *part_result_1, int *len) {
 
     int count = 0;
     char *buf1 = (char *)malloc(100);
-    if (!buf1){
+    if (!buf1) {
         return ERR;
     }
     int *buf = part_result_1;
@@ -312,7 +310,7 @@ int scan_string() {
     char c, *buf = NULL;
     int i = 0;
     size_t n1 = STRING_SIZE;
-    while ((c = (char)getchar()) !=EOF) {
+    while ((c = (char)getchar()) != EOF) {
         if (i >= n1 - 1) {
             buf = (char *)realloc(expression, n1 * 2);
             if (!buf) {
@@ -345,24 +343,33 @@ void init() {
 int main() {
     int err;
     int *partResult1 = (int *)malloc(100 * sizeof(int));
-    if (!partResult1){
+
+    int *partResult2 = (int *)malloc(100 * sizeof(int));
+    int *len_1 = (int *)calloc(1, sizeof(int));
+    if (!len_1 || !partResult1 || !partResult2) {
+        delete (len_1, partResult1, partResult2);
         printf(ERROR);
         return 0;
     }
-    int *partResult2 = (int *)malloc(100 * sizeof(int));
-    int *len_1 = (int *)calloc(1, sizeof(int));
-    if (!len_1 || !partResult1 || !partResult2){
-        err=ERR;
-        CHECK_ERR;
-    }
     init();
-    err = scan_string(expression);
-    CHECK_ERR
+    err = scan_string();
+    if (err) {
+        printf(ERROR);
+        delete (len_1, partResult1, partResult2);
+        return 0;
+    }
 
     err = execute(partResult1, partResult2, len_1);
-    CHECK_ERR
+    if (err) {
+        printf(ERROR);
+        delete (len_1, partResult1, partResult2);
+        return 0;
+    }
     err = printSet(partResult1, *len_1);
-    CHECK_ERR
+    if (err) {
+        printf(ERROR);
+    }
 
-    END_PROGRAMM
+    delete (len_1, partResult1, partResult2);
+    return 0;
 }
