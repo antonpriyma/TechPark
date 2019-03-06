@@ -9,16 +9,23 @@ using namespace std;
 
 class Stack{
 public:
-    int *data;
-    int top;
-    int cap;
+
     Stack(int n);
+    Stack(int *arr);
     void push(int x);
     int pop();
     bool checkEmpty();
+    int getTop();
+    int getCap();
+    int* getData();
+    void setTop(int top);
+    void setCap(int cap);
 
 
 private:
+    int *data;
+    int top;
+    int cap;
 };
 
 Stack::Stack(int n) {
@@ -49,13 +56,37 @@ void Stack::push(int x) {
 
 int Stack::pop(){
     return data[top--];
+}
 
+int Stack::getCap() {
+    return cap;
+}
+
+int Stack::getTop() {
+    return top;
+}
+
+void Stack::setTop(int top) {
+    this->top=top;
+}
+
+void Stack::setCap(int cap) {
+    this->cap=cap;
+}
+
+Stack::Stack(int *arr) {
+    if (arr){
+        this->data=arr;
+    }
+}
+
+int* Stack::getData() {
+    return data;
 }
 
 class Quene{
 public:
-    Stack *stack1;
-    Stack *stack2;
+
 
     Quene(int n);
     int pop();
@@ -63,23 +94,23 @@ public:
     bool checkEmpty();
     bool doCommand(int command,int value);
 private:
+    Stack *stack1;
+    Stack *stack2;
 };
 
 Quene::Quene(int n) {
     stack1=new Stack(n);
-    stack2=new Stack(n);
-    free(stack2->data);
-    stack2->data=stack1->data;
+    stack2=new Stack(stack1->getData());
 }
 
 bool Quene::checkEmpty() {
-    return stack1->top == stack2->top;
+    return stack1->getTop() == stack2->getTop();
 }
 
 int Quene::pop() {
     if (!checkEmpty()){
         int x=stack2->pop();
-        stack2->top+=2;
+        stack2->setTop(stack2->getTop()+2);
         return x;
     } else{
         return -1;
