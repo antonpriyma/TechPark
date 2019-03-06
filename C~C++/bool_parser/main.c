@@ -9,14 +9,6 @@
 #define NO 0
 #define ERROR "[error]"
 
-//#define END_PROGRAMM                                                           \
-//  delete (len_1, partResult1, partResult2);                                    \
-//  return 0;
-//#define CHECK_ERR                                                              \
-//  if (err) {                                                                   \
-//    printf(ERROR);                                                             \
-//    END_PROGRAMM;                                                              \
-//  }
 
 /* Рекурсивно-последовательный парсер логических выражений.
  * Студент - Прийма Антон
@@ -347,8 +339,8 @@ int main() {
     int *partResult2 = (int *)malloc(100 * sizeof(int));
     int *len_1 = (int *)calloc(1, sizeof(int));
     if (!len_1 || !partResult1 || !partResult2) {
-        delete (len_1, partResult1, partResult2);
         printf(ERROR);
+        delete (len_1, partResult1, partResult2);
         return 0;
     }
     init();
