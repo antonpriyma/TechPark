@@ -5,6 +5,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
   "/home/anton/CLionProjects/TechPark/Alg/trains/main.cpp" "/home/anton/CLionProjects/TechPark/Alg/trains/cmake-build-debug/CMakeFiles/trains.dir/main.cpp.o"
+  "/home/anton/CLionProjects/TechPark/Alg/trains/train.cpp" "/home/anton/CLionProjects/TechPark/Alg/trains/cmake-build-debug/CMakeFiles/trains.dir/train.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 
