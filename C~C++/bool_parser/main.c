@@ -9,18 +9,18 @@
 #define NO 0
 #define ERROR "[error]"
 
-#define END_PROGRAMM                                                           \
-  delete (len_1, partResult1, partResult2);                                     \
-  return 0;
-#define CHECK_ERR                                                              \
-  if (err) {                                                                   \
-    printf(ERROR);                                                             \
-    END_PROGRAMM;                                                              \
-  }
+//#define END_PROGRAMM                                                           \
+//  delete (len_1, partResult1, partResult2);                                    \
+//  return 0;
+//#define CHECK_ERR                                                              \
+//  if (err) {                                                                   \
+//    printf(ERROR);                                                             \
+//    END_PROGRAMM;                                                              \
+//  }
 
 /* Рекурсивно-последовательный парсер логических выражений.
  * Студент - Прийма Антон
- * Run id = 493
+ * Run id = 501
 */
 
 //В глобальных переменных храним выражение, текущий токен и индексы.
@@ -35,12 +35,9 @@ int eval_expr_3(int *, int *, int *, int *); //Уровень ^
 int string_to_int(char *, int *, int *);     //Токен -> массив
 
 void delete (int *val1, int *val2, int *val3) {
-    if (val1)
-        free(val1);
-    if (val2)
-        free(val2);
-    if (val3)
-        free(val3);
+    free(val1);
+    free(val2);
+    free(val3);
 }
 
 int remove_spaces(char *source) {
@@ -79,38 +76,38 @@ void unite(int *a, int *b, int *len1, int *len2) {
 }
 
 // Разность множеств.
-void sub(int *a, int *b, const int *len1, int *len2) {
+void sub(int *op1, int *op2, const int *len1, int *len2) {
     for (int i = 0; i < *len1; i++) {
         char contains = 0;
         for (int j = 0; j < *len2; j++) {
-            if (b[j] == a[i]) {
+            if (op2[j] == op1[i]) {
                 contains = 1;
                 break;
             }
         }
         if (contains) {
-            a[i] = -1;
+            op1[i] = -1;
         }
     }
     for (int i = 0; i < *len2; i++) {
-        b[i] = 0;
+        op2[i] = 0;
     }
     *len2 = 0;
 }
 
 // Пересечение множеств.
-void intersection(int *a, const int *b, const int *len1, const int *len2) {
+void intersection(int *op1, const int *op2, const int *len1, const int *len2) {
 
     for (int i = 0; i < *len1; i++) {
         char contains = 0;
         for (int j = 0; j < *len2; j++) {
-            if (a[i] == b[j]) {
+            if (op1[i] == op2[j]) {
                 contains = 1;
                 break;
             }
         }
         if (!contains) {
-            a[i] = -1;
+            op1[i] = -1;
         }
     }
 }
@@ -154,6 +151,11 @@ int eval_expr_2(int *part_result_1, int *part_result_2, int *len_1) {
     char op;
     int *len_2 = (int *)calloc(1, sizeof(int));
     int *buf = (int *)malloc(100 * sizeof(int));
+    if (!len_2 || !buf) {
+        free(len_2);
+        free(buf);
+        return ERR;
+    }
     get_token();
     int err = eval_expr_3(part_result_1, part_result_2, buf, len_1);
     if (err) {
@@ -190,6 +192,9 @@ int eval_expr_3(int *partResult1, int *partResult2, int *buf, int *len_1) {
         return ERR;
     }
     int *len_2 = (int *)calloc(1, sizeof(int));
+    if (!len_2) {
+        return ERR;
+    }
     int err = eval_expr_4(partResult1, partResult2, len_1);
     if (err) {
         free(len_2);
@@ -241,6 +246,9 @@ int string_to_int(char *token, int *part_result_1, int *len) {
 
     int count = 0;
     char *buf1 = (char *)malloc(100);
+    if (!buf1) {
+        return ERR;
+    }
     int *buf = part_result_1;
     for (int i = 0; i < tok_index; i++) {
         if (token[i] == ',' || token[i] == '[') {
@@ -335,16 +343,33 @@ void init() {
 int main() {
     int err;
     int *partResult1 = (int *)malloc(100 * sizeof(int));
+
     int *partResult2 = (int *)malloc(100 * sizeof(int));
     int *len_1 = (int *)calloc(1, sizeof(int));
+    if (!len_1 || !partResult1 || !partResult2) {
+        delete (len_1, partResult1, partResult2);
+        printf(ERROR);
+        return 0;
+    }
     init();
-    err = scan_string(expression);
-    CHECK_ERR
+    err = scan_string();
+    if (err) {
+        printf(ERROR);
+        delete (len_1, partResult1, partResult2);
+        return 0;
+    }
 
     err = execute(partResult1, partResult2, len_1);
-    CHECK_ERR
+    if (err) {
+        printf(ERROR);
+        delete (len_1, partResult1, partResult2);
+        return 0;
+    }
     err = printSet(partResult1, *len_1);
-    CHECK_ERR
+    if (err) {
+        printf(ERROR);
+    }
 
-    END_PROGRAMM
+    delete (len_1, partResult1, partResult2);
+    return 0;
 }
