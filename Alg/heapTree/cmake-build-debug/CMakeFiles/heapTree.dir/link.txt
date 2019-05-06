@@ -1,0 +1,1 @@
+/usr/bin/c++  -g   CMakeFiles/heapTree.dir/main.cpp.o CMakeFiles/heapTree.dir/example.cpp.o  -o heapTree 

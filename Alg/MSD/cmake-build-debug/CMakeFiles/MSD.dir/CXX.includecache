@@ -1,0 +1,16 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/anton/CLionProjects/TechPark/Alg/MSD/example.cpp
+
+/home/anton/CLionProjects/TechPark/Alg/MSD/main.cpp
+iostream
+-
+assert.h
+-
+

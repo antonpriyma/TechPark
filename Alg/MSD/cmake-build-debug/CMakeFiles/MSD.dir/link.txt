@@ -1,0 +1,1 @@
+/usr/bin/c++  -g   CMakeFiles/MSD.dir/main.cpp.o CMakeFiles/MSD.dir/example.cpp.o  -o MSD 

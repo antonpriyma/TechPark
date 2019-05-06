@@ -7,8 +7,10 @@
 #IncludeRegexTransform: 
 
 /home/anton/CLionProjects/TechPark/Alg/trains/main.cpp
-iostream
--
 
 /home/anton/CLionProjects/TechPark/Alg/trains/train.cpp
+iostream
+-
+assert.h
+-
 

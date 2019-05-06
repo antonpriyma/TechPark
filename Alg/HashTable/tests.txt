@@ -1,0 +1,20 @@
+1:{
+ + a
+ + b
+ + c
+ + d
+ + f
+ + h
+ + k
+ + p
+}
+
+2:{
++ hello
++ bye
+? bye
++ bye
+- bye
+? bye
+? hello
+}

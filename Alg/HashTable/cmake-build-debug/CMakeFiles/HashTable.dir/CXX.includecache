@@ -1,0 +1,18 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/anton/CLionProjects/TechPark/Alg/HashTable/OpenHashTable.cpp
+
+/home/anton/CLionProjects/TechPark/Alg/HashTable/main.cpp
+iostream
+-
+vector
+-
+assert.h
+-
+

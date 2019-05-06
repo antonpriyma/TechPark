@@ -1,0 +1,24 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/anton/CLionProjects/TechPark/Alg/KeySetTest/JavaKeyWords.h
+iostream
+-
+fstream
+-
+set
+-
+
+/home/anton/CLionProjects/TechPark/Alg/KeySetTest/main.cpp
+iostream
+-
+set
+-
+JavaKeyWords.h
+/home/anton/CLionProjects/TechPark/Alg/KeySetTest/JavaKeyWords.h
+

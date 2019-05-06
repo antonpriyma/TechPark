@@ -1,0 +1,3 @@
+/home/anton/CLionProjects/TechPark/Alg/adv1.1/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/anton/CLionProjects/TechPark/Alg/adv1.1/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/anton/CLionProjects/TechPark/Alg/adv1.1/cmake-build-debug/CMakeFiles/adv1_1.dir
