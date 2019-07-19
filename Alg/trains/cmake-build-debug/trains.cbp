@@ -87,6 +87,12 @@
 		<Unit filename="/home/anton/CLionProjects/TechPark/Alg/trains/main.cpp">
 			<Option target="trains"/>
 		</Unit>
+		<Unit filename="/home/anton/CLionProjects/TechPark/Alg/trains/train.cpp">
+			<Option target="trains"/>
+		</Unit>
+		<Unit filename="/home/anton/CLionProjects/TechPark/Alg/trains/train.h">
+			<Option target="trains"/>
+		</Unit>
 		<Unit filename="/home/anton/CLionProjects/TechPark/Alg/trains/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>
 		</Unit>

@@ -1,1 +1,1 @@
-/usr/bin/c++  -g   CMakeFiles/trains.dir/main.cpp.o  -o trains 
+/usr/bin/c++  -g   CMakeFiles/trains.dir/main.cpp.o CMakeFiles/trains.dir/train.cpp.o  -o trains 

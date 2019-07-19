@@ -1,125 +1,187 @@
 #include <iostream>
 
-#define POP 2
-#define PUSH 3
-#define YES "YES"
-#define NOT "NO"
-
-using namespace std;
-
-class Stack{
+//В круг выстроено N человек, пронумерованных числами от 1 до N.
+// Будем исключать каждого k-ого до тех пор, пока не уцелеет только один человек.
+//Например, если N=10, k=3, то сначала умрет 3-й, потом 6-й, затем 9-й, затем 2-й, затем 7-й, потом 1-й, потом 8-й, за ним - 5-й, и потом 10-й.
+// Таким образом, уцелеет 4-й.
+//Необходимо определить номер уцелевшего.
+//N, k ≤ 10000.
+template <class T> class Vector {
 public:
-    int *data;
-    int top;
-    int cap;
-    Stack(int n);
-    void push(int x);
-    int pop();
-    bool checkEmpty();
+    typedef T *iterator;
 
+    Vector();
+    Vector(unsigned int size);
+    ~Vector();
+
+    unsigned int capacity() const;
+    unsigned int size() const;
+
+    iterator begin();
+    iterator end();
+    T &front();
+    T &back();
+    void push_back(const T &value);
+    void pop_back();
+
+
+    T &operator[](unsigned int index);
+    Vector<T> &operator=(const Vector<T> &);
+    void clear();
 
 private:
+    unsigned int my_size;
+    unsigned int my_capacity;
+    T *buffer;
+
+    void reserve(unsigned int capacity);
 };
 
-Stack::Stack(int n) {
-    int *buf = (int *)malloc(n* sizeof(int));
-    if (!buf){
-        cout<<"Error";
-        return;
+
+template <class T> Vector<T>::Vector() {
+    my_capacity = 0;
+    my_size = 0;
+    buffer = 0;
+}
+
+template <class T> Vector<T>::Vector(unsigned int size) {
+    my_capacity = size;
+    my_size = size;
+    buffer = new T[size];
+}
+
+template <class T> void Vector<T>::reserve(unsigned int capacity) {
+    if (buffer == 0) {
+        my_size = 0;
+        my_capacity = 0;
     }
-    data=buf;
-    top=0;
-    cap=n;
-
-}
-bool Stack::checkEmpty() {
-    if (top==0){
-        return true;
+    T *Newbuffer = new T[capacity];
+    unsigned int l_Size;
+    if (capacity < my_size) {
+        l_Size = capacity;
+    } else {
+        l_Size = my_size;
     }
-    return false;
-}
-void Stack::push(int x) {
-    if (top==cap){
-        cout<<"Out of heap";
-        return;
-    } else{
-        data[top++]=x;
+
+    for (unsigned int i = 0; i < l_Size; i++)
+        Newbuffer[i] = buffer[i];
+
+    my_capacity = capacity;
+    if (buffer) {
+        delete[] buffer;
     }
+    buffer = Newbuffer;
 }
 
-int Stack::pop(){
-    return data[top--];
-
+template <class T> Vector<T> &Vector<T>::operator=(const Vector<T> &v) {
+    delete[] buffer;
+    my_size = v.my_size;
+    my_capacity = v.my_capacity;
+    buffer = new T[my_size];
+    for (unsigned int i = 0; i < my_size; i++)
+        buffer[i] = v.buffer[i];
+    return *this;
 }
 
-class Quene{
-public:
-    Stack *stack1;
-    Stack *stack2;
-
-    Quene(int n);
-    int pop();
-    void push(int x);
-    bool checkEmpty();
-    bool doCommand(int command,int value);
-private:
-};
-
-Quene::Quene(int n) {
-    stack1=new Stack(n);
-    stack2=new Stack(n);
-    free(stack2->data);
-    stack2->data=stack1->data;
+template <class T> typename Vector<T>::iterator Vector<T>::begin() {
+    return buffer;
 }
 
-bool Quene::checkEmpty() {
-    return stack1->top == stack2->top;
+template <class T> typename Vector<T>::iterator Vector<T>::end() {
+    return buffer + size();
 }
 
-int Quene::pop() {
-    if (!checkEmpty()){
-        int x=stack2->pop();
-        stack2->top+=2;
-        return x;
-    } else{
-        return -1;
+template <class T> T &Vector<T>::front() { return buffer[0]; }
+
+template <class T> T &Vector<T>::back() { return buffer[my_size - 1]; }
+
+template <class T> void Vector<T>::push_back(const T &v) {
+    if (my_size >= my_capacity)
+        reserve(my_capacity + 5);
+    buffer[my_size++] = v;
+}
+
+template <class T> void Vector<T>::pop_back() {
+    buffer[my_size - 1] = 0;
+    my_size--;
+}
+
+template <class T>
+unsigned int Vector<T>::size() const //
+{
+    return my_size;
+}
+
+template <class T> T &Vector<T>::operator[](unsigned int index) {
+    return buffer[index];
+}
+
+template <class T> unsigned int Vector<T>::capacity() const {
+    return my_capacity;
+}
+
+template <class T> Vector<T>::~Vector() {
+
+    if (my_size && my_capacity) {
+        delete[](buffer);
     }
+    my_size = 0;
+    my_capacity = 0;
+}
+template <class T> void Vector<T>::clear() {
+    my_capacity = 0;
+    my_size = 0;
+    buffer = 0;
 }
 
-void Quene::push(int x) {
-    stack1->push(x);
+void move(const int N,const int K,Vector<int> &list,int &size,int &count){
+
+    for (int i=0;i<K;i++){
+        int j=1;
+        if (count>=N-1){
+            count-=N;
+        }
+        int buf=count+j;
+        while (list[buf]==-1){
+            j++;
+            buf = count+j;
+            if (buf>=N){
+                buf-=N;
+            }
+        }
+        count=buf;
+    }//Перемещаемся к следующему живому
+    list[count]=-1;
+    size--;
 }
 
-bool Quene::doCommand(int command, int value) {
-    switch (command){
-        case POP:
-            return pop()==value;
-        case PUSH:
-            push(value);
-            break;
+Vector<int> init(int &K,int &N,int &size){
+    std::cin>>N>>K;
+    Vector<int> list(N);
+    for (int i =0;i<N;i++){
+        list[i]=i;
     }
-    return true;
+    size=N;
+    return list;
+
 }
 
-int main() {
-    int n=0;
-    cin>>n;
-    bool ok = true;
-    Quene *quene=new Quene(n);
-    for (int i=0;i<n;i++){
-        int command=0,value=0;
-        cin>>command>>value;
-        if (!quene->doCommand(command,value)){
-            ok = false;
+void printResult(Vector<int> &list){
+    for(int i:list){
+        if (i!=-1){
+            std::cout<<i+1;
         }
     }
-    if (ok){
-        cout<<YES;
-    } else{
-        cout<<NOT;
+}
+
+
+
+int main() {
+    int N=0,K=0,size=0,count=-1;
+    Vector<int> list =  init(K,N,size);
+    while (size>=2){
+        move(N,K,list,size,count);
     }
-
-
-    delete(quene);
+    printResult(list);
     return 0;
 }

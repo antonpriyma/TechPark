@@ -1,0 +1,20 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/anton/CLionProjects/TechPark/Alg/heapTree/example.cpp
+
+/home/anton/CLionProjects/TechPark/Alg/heapTree/main.cpp
+iostream
+-
+assert.h
+-
+math.h
+-
+queue
+-
+

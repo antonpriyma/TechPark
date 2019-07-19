@@ -1,0 +1,1 @@
+/usr/bin/c++  -g   CMakeFiles/marketing.dir/main.cpp.o CMakeFiles/marketing.dir/solve.cpp.o  -o marketing 

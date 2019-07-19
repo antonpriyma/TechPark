@@ -1,0 +1,3 @@
+/home/anton/CLionProjects/TechPark/Alg/orderStatistic/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/anton/CLionProjects/TechPark/Alg/orderStatistic/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/anton/CLionProjects/TechPark/Alg/orderStatistic/cmake-build-debug/CMakeFiles/orderStatistic.dir

@@ -3,3 +3,5 @@
 
 CMakeFiles/trains.dir/main.cpp.o: ../main.cpp
 
+CMakeFiles/trains.dir/train.cpp.o: ../train.cpp
+

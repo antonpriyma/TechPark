@@ -1,0 +1,1 @@
+/usr/bin/c++  -g   CMakeFiles/adv1_1.dir/main.cpp.o  -o adv1_1 
